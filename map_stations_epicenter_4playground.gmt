@@ -1,0 +1,185 @@
+#!/bin/bash
+# This GMt script plots the epicenter and stations available for the Inversion
+# Of that event. Although we might need to modify to make it the final used stations
+# after quality control has been applied. 
+# also plots in light gray previous seismicity.
+
+CONVERT=convert
+PS2PDF=ps2pdf
+MTHOME=/Users/jaimeconvers/geophysics/MTinversions/MTrapidkiwi
+MTLIB=$MTHOME/lib
+MINMAX=minmax
+
+#################################################
+USAGE=$MTHOME/lib/usage.`basename $0`
+printf " 
+USAGE: `basename $0` -F EVENTINFO -S STATIONSFILE 
+	Function: 
+		Plot epicenter and stations used for the moment tensor inversion of and event
+		It will adjust margins according to location of stations and epicenter
+MANDATORY FLAGS:
+	-F File with event information, this event is of the form:
+	   2009-12-17 	 01:37:51  +36.4870  -9.9940 	  31  6.0
+	   YYYY-MM-DD    hh:mm:ss     Lat      Long    Depth  Mag 
+	   
+	-S File containing station information 
+
+EXAMPLE: %% `basename $0` -Fevent.info -Sdata-proc/stations.dat.rapid \n\n" > $USAGE
+
+### FLAG OPTIONS ###
+while getopts "F:S:" OPT
+do
+	case ${OPT} in
+		F) EVENTINFO=$OPTARG
+		 ;;
+		S) STATIONSFILE=$OPTARG
+		 ;;
+	 	*) cat $USAGE
+		   rm $USAGE
+		   exit 1
+		 ;;
+ 	esac
+done	
+	   
+if [[ ! "$EVENTINFO" || ! "$STATIONSFILE" ]] ; then
+	echo "ERROR: Mandatory EVENTINFO or STATIONS file  not given. Exiting..."
+	cat $USAGE
+	rm $USAGE
+	exit 1
+fi
+# check that the event.info file exists and has a size geater than zero
+if [[ ! -s $EVENTINFO ]] ; then
+	echo "Event file $EVENTINFO either doesn't exists or is empty. Please check the file"
+	exit 1
+fi
+# Check that the stations file exists and has a size greater than zero
+if [[ ! -s $STATIONSFILE ]] ; then
+	echo "Event file $STATIONSFILE either doesn;t exists or is empty. Please check the file"
+	exit 1
+fi
+rm $USAGE
+##################################################
+
+SEISMICITY=$MTHOME/lib/eqk-instrcatalog.epi
+eyear=`awk 'NR==1{print $1}' $EVENTINFO `
+etime=`awk 'NR==1{print $2}' $EVENTINFO `
+elat=`awk 'NR==1{print $3}' $EVENTINFO `
+elon=`awk 'NR==1{print $4}' $EVENTINFO `
+edepth=`awk 'NR==1{print $5}' $EVENTINFO `
+emag=`awk 'NR==1{print $6}' $EVENTINFO `
+YYYYMMDD=`awk 'NR==1{print $1}' $EVENTINFO| awk -F "-" '{print $1$2$3}' `
+hhmmss=`awk 'NR==1{print $2}' $EVENTINFO | awk -F ":" '{print $1$2$3}' `
+TITLE="$eyear `echo $etime | awk -F ":" '{printf "%s%s%s%s%s",$1,"\\\072",$2,"\\\072",$3}'`   ML=$emag "
+#printf "$TITLE \n"
+OUTFILE=stations_kiwi_${YYYYMMDD}${hhmmss}.ps
+#echo  $YYYYMMDD $hhmmss $OUTFILE
+###################################################
+
+# Getting the values for plot boundaries:
+TEMPFILE=tempfile_`basename $0`.temp 
+#awk '{print $4,$3,$2}' $STATIONSFILE > $TEMPFILE
+#awk '{print $4,$3,$1}' $EVENTINFO    >> $TEMPFILE 
+#MINMAXVALUES=`$MINMAX -C $TEMPFILE`
+#LONMIN=`echo $MINMAXVALUES | awk '{print $1-0.5}'`
+#LONMAX=`echo $MINMAXVALUES | awk '{print $2+2.0}'`
+#LATMIN=`echo $MINMAXVALUES | awk '{print $3-0.5}'`
+#LATMAX=`echo $MINMAXVALUES | awk '{print $4+0.5}'`
+#rm $TEMPFILE # remove this file, I defintely don't need more files!!
+LONMIN=-14 ; LONMAX=-5
+LATMIN=32  ; LATMAX=42
+echo LONMIN=$LONMIN, LONMAX=$LONMAX, LATMIN=$LATMIN, LATMAX=$LATMAX
+###################################################
+
+# Parameters of plot:
+SCALE=17
+#LATMIN=35.0
+#LATMAX=43.0
+#LONMIN=-12.0
+#LONMAX=-5.0
+RANGE="-R$LONMIN/$LONMAX/$LATMIN/$LATMAX"
+PROJ="-JM10c"
+BGN="$RANGE $PROJ -K -P"
+MID="$RANGE $PROJ -O -K -P"
+END="$RANGE $PROJ -O -P"
+GRIDFILE=grid_100km.grd # temporary grid file created here
+
+# get a decent tick spacing:
+YINTERVAL=`echo $LATMAX $LATMIN | awk '{print $1-$2}' `
+XINVERVAL=`echo $LONMAX $LONMIN | awk '{print $1-$2}' `
+echo XInterval=$XINVERVAL and Yinterval=$YINTERVAL  
+# X-Interval
+if [[ "$XINVERVAL" < 10 ]] ; then
+        XTICK=1
+elif [[ "$XINVERVAL" < 20 ]] ; then
+        XTICK=3
+elif [[ "$XINVERVAL" < 30 ]] ; then
+        XTICK=3
+else
+        XTICK=5
+fi
+# Y-interval
+if [[ "$YINVERVAL" < 10 ]] ; then
+        YTICK=1
+elif [[ "$YINVERVAL" < 20 ]] ; then
+        YTICK=3
+elif [[ "$YINVERVAL" < 30 ]] ; then
+        YTICK=3
+else
+        YTICK=5
+fi
+
+
+
+####################################################
+## Begin Plot ##
+gmtset ANNOT_FONT_SIZE_PRIMARY 10 PAPER_MEDIA letter+ PLOT_DEGREE_FORMAT D # GMT 4
+gmtset HEADER_FONT_SIZE 12
+
+grdmath $RANGE  -I0.1 $elon $elat SDIST = $GRIDFILE # create the gird file to later make the contours
+
+psbasemap -B1a${XTICK}:."$TITLE":/1a${YTICK}WeSn -X3 -Y3 $BGN > $OUTFILE
+pscoast -Dh -A50 -N1/1/1 -W1/0 $MID >> $OUTFILE
+
+# Plot the contour lines every 100km with 'km' added to the labels and color them gray
+grdcontour $GRIDFILE $RANGE -A100+ap0+ukm+s8+kblack -Gl$elon/$elat/$elon/$LATMAX -S8 -C100 -Wgray -O -K -J >> $OUTFILE
+
+#Plot previous Seismicity
+awk '{print $1,$2}' $SEISMICITY | psxy -Glightgray -Sc0.03 $MID >> $OUTFILE
+# Plot Stations:
+awk '{print $3,$2}' $STATIONSFILE | psxy -St0.4 -Gblue -Wthinnest $MID >> $OUTFILE
+awk '{print $3,$2,8,0,0,"LB",$1}' $STATIONSFILE | pstext -D0.06i/0 $MID >> $OUTFILE
+# Plot focal mechanisms
+angle=36
+FMradius=1.5
+FOCALMECHANISMS=FocalMechanisms
+DELTAANGLE=45
+ANGLE=0
+RADIUS=2.0
+while read line
+do
+    BBlon=`echo $elon $ANGLE $RADIUS | awk '{print $1+$3*cos( $2*3.14/180 )}'`
+    BBlat=`echo $elat $ANGLE $RADIUS | awk '{print $1+$3*sin( $2*3.14/180 )}'`
+    #echo $BBlon $BBlat |  psxy -St0.2 -Gblue -Wthinnest $MID >> $OUTFILE
+    echo $line | awk '$1!~"#"&&$1!~"KIWI"{ print '$elon','$elat','$edepth',$6,$7,$8,$5,'$BBlon','$BBlat',$1  }' | psmeca $MID -Sa0.7 -C -Wblack -G105/105/105 >> $OUTFILE
+    echo $line | awk '$1!~"#"&&$1=="KIWI"{ print '$elon','$elat','$edepth',$6,$7,$8,$5,'$BBlon','$BBlat',$1  }' | psmeca $MID -Sa0.7 -C -Wblack -G255/30/30 >> $OUTFILE
+    let ANGLE=$ANGLE+$DELTAANGLE
+done < $FOCALMECHANISMS
+# Plot epicenter:
+echo $elon $elat | psxy -Gred  -Sa0.5 $END >> $OUTFILE
+
+########################################################
+
+### Cleanup and format conversion ###
+# remove extra files:
+rm $GRIDFILE
+
+$CONVERT -antialias  $OUTFILE `basename $OUTFILE .ps`.png
+$PS2PDF $OUTFILE # convert to pdf from .ps
+rm $OUTFILE # Keep only .png and pdf to save space
+# bring up plot:
+#open `basename $OUTFILE .ps`.pdf
+#open $OUTFILE
+#open `basename $OUTFILE .ps`.png
+
+exit 0
+
