@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#extract a GMT-ready grid that we will use for plotting or contouring
+
+grdraster 1 -R-16/-4/33/45 -Gmainland.nc -V 
 
 
 exit 0
