@@ -2,9 +2,14 @@
 
 #extract a GMT-ready grid that we will use for plotting or contouring
 
-#grdraster 1 -R-16/-4/33/45 -Gmainland.nc -V 
-testgridfile=GMRTv3_0_20151026topo-2.grd
-grdraster $testgridfile -R-16/-4/33/44 -Gmainland.nc -V 
+RANGE="-R-16/1/33/44" 
+
+# 1)  extract form file with reference number '1' in grdraster.info.
+# please see the file for details
+grdraster 1 -R-16/-4/33/45 -Gmainland.nc -V 
+
+# 2) take a xyz file and convert it into a GMT-friendly file to plot
+
 
 
 exit 0
