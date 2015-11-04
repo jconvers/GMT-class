@@ -33,6 +33,7 @@ CPTTOPO=GMT_relief.cpt
 
 grdimage $TOPOGRD -C$CPTTOPO -I$TOPOGRD.grad -Bwens -E100 $BGN -P > $OUTFILE
 
+###
 
 
 

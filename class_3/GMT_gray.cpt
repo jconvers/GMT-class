@@ -1,0 +1,5 @@
+#	$Id: GMT_gray.cpt 9545 2011-07-27 19:31:54Z pwessel $
+#
+# Plain linear gray colormap
+# COLOR_MODEL = RGB
+0	0	0	0	1	255	255	255
