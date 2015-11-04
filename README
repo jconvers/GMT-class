@@ -1,7 +1,7 @@
 # GMT-class
 GMT4 scripts for the mini-course. Clone me to get the scripts and examples
 
-just use "https://github.com/jconvers/GMT-class.git"
+just use "git clone https://github.com/jconvers/GMT-class.git"
 
 Keep in mind, there are some examples that will not run simply because the files that
 it is using are too big to put here. for everything else, just try it.
