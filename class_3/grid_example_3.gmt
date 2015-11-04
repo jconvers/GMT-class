@@ -1,0 +1,40 @@
+#!/bin/bash
+
+#extract a GMT-ready grid that we will use for plotting or contouring
+
+RANGE="-R-16/1/33/44"
+
+# 1)  extract form file with reference number '1' in grdraster.info.
+# please see the file for details
+#grdraster 9 -R-16/-4/33/45 -Gmainland.nc -V 
+# or in a more organized way:
+TOPOGRD=mainland.nc
+grdraster 9 $RANGE -G$TOPOGRD -V
+
+# now that our grid file is ready...
+
+# the goal is to have a nice-looking map right? and a lot of that depends on how we present
+# the topography image, because in the end it is shown as an image, but the grid has
+# coordinates and elevations (in most cases). This is done by creating a file that has
+# the illumination information:
+
+grdgradient $TOPOGRD -G$TOPOGRD.grad -A270 -Nt0.6
+
+
+
+# lets involve more things, to keep in sync with previous scripts that we have looked at:
+SCALE=18
+OUTFILE=`basename $0 .gmt`.ps
+PROJ="-JM${SCALE}"
+BGN="$RANGE $PROJ -K"
+MID="$RANGE $PROJ -O -K"
+END="$RANGE $PROJ -O"
+CPTTOPO=GMT_relief.cpt
+
+grdimage $TOPOGRD -C$CPTTOPO -I$TOPOGRD.grad -Bwens -E100  $BGN -P  > $OUTFILE
+
+pscoast -B1a5/1a2WeNs -N1 -N3 -Dh -W2/0/0/0    $END >> $OUTFILE
+
+
+
+exit 0
