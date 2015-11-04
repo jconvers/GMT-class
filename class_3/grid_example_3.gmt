@@ -9,9 +9,11 @@ RANGE="-R-16/1/33/44"
 #grdraster 9 -R-16/-4/33/45 -Gmainland.nc -V 
 # or in a more organized way:
 TOPOGRD=mainland.nc
-grdraster 9 $RANGE -G$TOPOGRD -V 
 
-# now that our grid file is ready...
+## I have commented this following command because the file 'mainland.nc' SHOULD BE THERE
+#grdraster 9 $RANGE -G$TOPOGRD -V 
+
+# With the topo grid mainland.nc made already...
 
 # the goal is to have a nice-looking map right? and a lot of that depends on how we present
 # the topography image, because in the end it is shown as an image, but the grid has
@@ -31,16 +33,23 @@ MID="$RANGE $PROJ -O -K"
 END="$RANGE $PROJ -O"
 CPTTOPO=GMT_relief.cpt
 
-grdimage $TOPOGRD -C$CPTTOPO -I$TOPOGRD.grad -Bwens -E100 $BGN -P > $OUTFILE
+# if you want to run the previous example, uncomment this and comment the RAINBOW part
+# grdimage $TOPOGRD -C$CPTTOPO -I$TOPOGRD.grad -Bwens -E100 $BGN -P > $OUTFILE
 
+
+###### RAINBOW FOR TOPOGRAPHY #######
 ###
 
 MYCPT=mydata.cpt
-# grd2cpt $TOPOGRD -Crainbow -L-6000/2000 -S-1000/3000/20   > $MYCPT
-# grd2cpt $TOPOGRD -Crainbow -L-6000/2000 -S-1000/3000/20 -V  
+
  grd2cpt $TOPOGRD -Crainbow   > $MYCPT
  grd2cpt $TOPOGRD -Crainbow -V  
+
+# weird 
 # grd2cpt mainland.nc -Cgray -L0/1 -S0/200/20 > $MYCPT
+# grd2cpt $TOPOGRD -Crainbow -L-6000/2000 -S-1000/3000/20   > $MYCPT
+# grd2cpt $TOPOGRD -Crainbow -L-6000/2000 -S-1000/3000/20 -V  
+
 grdimage $TOPOGRD -C$MYCPT -I$TOPOGRD.grad -Bwens -E100 $BGN -P > $OUTFILE
 # lets see how badly we did with the colors
 psscale -C$MYCPT -D8/-1/10/0.5h -B2000/:meters: -O >> $OUTFILE

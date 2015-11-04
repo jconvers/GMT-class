@@ -5,15 +5,12 @@
 RANGE="-R-16/1/33/44" 
 topofile=mainland.nc
 
-# 1)  extract form file with reference number '1' in grdraster.info.
+# 1)  extract form file with reference number '9' in grdraster.info.
 # please see the file for details
-<<<<<<< HEAD
-grdraster 1 -R-16/-4/33/45 -Gtopofile -V 
-=======
-grdraster 9 -R-16/-4/33/45 -Gmainland.nc -V 
->>>>>>> f111a10abf130442fd974fcf502e544a1797f570
 
-# 2) take a xyz file and convert it into a GMT-friendly file to plot
+## I have commented this since you most likele do not have the 'master ETOPO file'
+#grdraster 9 -R-16/-4/33/45 -Gmainland.nc -V 
+
 
 
 

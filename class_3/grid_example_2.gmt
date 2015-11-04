@@ -7,19 +7,23 @@ RANGE="-R-16/1/33/44"
 # 1)  extract form file with reference number '1' in grdraster.info.
 # please see the file for details
 #grdraster 9 -R-16/-4/33/45 -Gmainland.nc -V 
-# or in a more organized way:
-TOPOGRD=mainland.nc
-grdraster 9 $RANGE -G$TOPOGRD -V 
 
-# now that our grid file is ready...
+# or in a more organized way:
+
+TOPOGRD=mainland.nc
+## I have commented this since the file 'mainland.nc' was created already
+#grdraster 9 $RANGE -G$TOPOGRD -V 
+
+#
+#####  With the file 'mainland.nc' made: #####
 
 # the goal is to have a nice-looking map right? and a lot of that depends on how we present
 # the topography image, because in the end it is shown as an image, but the grid has
 # coordinates and elevations (in most cases). This is done by creating a file that has
 # the illumination information:
 
+# remember, ALWAYS check the manual pages to make sure you are using the function correctly
 grdgradient $TOPOGRD -G$TOPOGRD.grad -A270 -Ne0.6
-
 
 
 # lets involve more things, to keep in sync with previous scripts that we have looked at:
