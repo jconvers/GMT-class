@@ -1,0 +1,54 @@
+#!/bin/bash
+# this script is just an example on how to use flag options:
+#
+# lets say that we want to make script for GMT and we want to use it to make several plots
+# all with different input files, here is where the flag options become useful
+# normally, our script would have something like"
+# inputfile=data.txt # ot something like that
+#
+# then we would call the variable $inputfile inside the gmt script.
+#
+# if we want to 'feed' the script with an option for a file, and maybe another option for the
+# output file name?
+# there are many ways to do this, but the one that has worked the best for me is with  
+
+USAGE=`basename $0`.usage
+printf "
+USAGE: `basename $0` -F inputfile
+Function:
+    Do something
+Mandatory flags:
+    -F inputfile
+Example: %% `basename $0` -F myfile.txt \n\n" > $USAGE
+
+# Flag options:
+while getopts "F:h" OPT
+do
+    case ${OPT} in
+        F) INPUTFILE=$OPTARG
+           echo you have selected $INPUTFILE
+           ;;
+        h) cat $USAGE
+           rm $USAGE
+           exit 1
+           ;;
+        *)
+            cat $USAGE
+            rm $USAGE
+            exit 1
+            ;;
+    esac
+done
+if [[ ! $INPUTFILE ]] ; then 
+    echo No input file selected or not the right flag...
+    cat $USAGE
+    rm $USAGE
+    exit 2
+fi
+##################################### 
+## The script would start here...
+
+
+# End and cleanup temporary files
+rm $USAGE
+exit 1
