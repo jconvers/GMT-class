@@ -1,0 +1,42 @@
+#!/bin/bash
+# using a grid show perspectives...
+
+LONMIN=-12
+LONMAX=0
+LATMIN=35
+LATMAX=42
+RANGE="-R$LONMIN/$LONMAX/$LATMIN/$LATMAX"
+SCALE=18
+OUTFILE=`basename $0 .gmt`.ps 
+PROJ="-JM${SCALE}"
+BGN="$RANGE $PROJ -K"
+MID="$RANGE $PROJ -O -K"
+END="$RANGE $PROJ -O"
+
+#grdraster 9 $RANGE -G$TOPOGRD -V 
+
+TOPOGRD=dummyfile
+
+grdraster 9 $RANGE -G$TOPOGRD -V 
+
+
+# make the color palette
+CPTTOPO=mycpt.temp
+makecpt -Crelief -T-6000/3000/250 > $CPTTOPO
+
+# make intensity file
+gradients=mygradients.temp
+grdgradient $TOPOGRD -A0/90 -G$TOPOGRD.grad -Ne0.6 -V 
+
+#grdimage $TOPOGRD -C$CPTTOPO -I$TOPOGRD.grad -B1a0.5/1a0.5WenS -E100 $BGN -P > $OUTFILE
+#exit 1
+#grdview with azimuth/elevation
+#grdview $TOPOGRD  -Jx5c  -B1a0.5/1a0.5WenS -Jz1i -C$CPTTOPO -V -P -I$TOPOGRD.grad -E260/5 -Qs > $OUTFILE
+angles="0 45 90 135 180 225 270 315 360"
+for i in $angles
+do
+    OUTFILE=`basename $0 .gmt`_${i}.ps
+    grdview $TOPOGRD  -JM10i -Jz0.0005 -C$CPTTOPO -V -P -I$TOPOGRD.grad -E$i/5 -Qs > $OUTFILE
+done
+
+exit 0

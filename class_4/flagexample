@@ -11,7 +11,11 @@
 # if we want to 'feed' the script with an option for a file, and maybe another option for the
 # output file name?
 # there are many ways to do this, but the one that has worked the best for me is with  
+# "getopts". 
+# rahter than going into more details about it I prefer to show how I use it:
 
+# This might look more complicated than what it should be, but I start with making a "usage"
+# or help file, it is a dummy file that will de deleted anyway.
 USAGE=`basename $0`.usage
 printf "
 USAGE: `basename $0` -F inputfile
@@ -21,12 +25,13 @@ Mandatory flags:
     -F inputfile
 Example: %% `basename $0` -F myfile.txt \n\n" > $USAGE
 
+# now, here come the flag options the flags I want to add are between the " " symbols
 # Flag options:
-while getopts "F:h" OPT
-do
+while getopts "F:h" OPT # the ":" in front of h will prevent getopts form giving you errors if there is an
+do                      # argument missing forfor the 'h' flag.
     case ${OPT} in
         F) INPUTFILE=$OPTARG
-           echo you have selected $INPUTFILE
+           #echo you have selected $INPUTFILE
            ;;
         h) cat $USAGE
            rm $USAGE
@@ -39,6 +44,7 @@ do
             ;;
     esac
 done
+
 if [[ ! $INPUTFILE ]] ; then 
     echo No input file selected or not the right flag...
     cat $USAGE
@@ -48,6 +54,7 @@ fi
 ##################################### 
 ## The script would start here...
 
+echo you have selected $INPUTFILE
 
 # End and cleanup temporary files
 rm $USAGE

@@ -3,3 +3,4 @@
 .gmtcommands4
 .gmt*
 *.usage
+*.temp
