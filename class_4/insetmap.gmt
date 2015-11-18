@@ -28,17 +28,19 @@ makecpt -Crelief -T-6000/3000/250 > $CPTTOPO
 grdgradient $TOPOGRD -A0/90 -G$TOPOGRD.grad -Ne0.6 -V 
 
 #To just make the image:
-grdimage $TOPOGRD -C$CPTTOPO -I$TOPOGRD.grad -B1a0.5/1a0.5WenS -E100 $BGN -P > $OUTFILE
-exit 1
+grdimage $TOPOGRD -C../class_3/GMT_relief.cpt -I$TOPOGRD.grad -B1a0.5/1a0.5WenS -E100 $BGN -P > $OUTFILE
+
+# now, add the inset map:
+
+SCALE2=3
+RANGE2="-R-30/10/10/50"
+gmtset BASEMAP_TYPE fancy
+PROJ2="-JM${SCALE2}/$SCALE2"
+psbasemap -B0 $PROJ2 $RANGE2 -G255/255/255 -Y9.8 -O -K >> $OUTFILE
+pscoast $RANGE2 $PROJ2 -B -Dc -A5000 -Ggray -O  >> $OUTFILE
 
 
-#grdview with azimuth/elevation
-#grdview $TOPOGRD  -Jx5c  -B1a0.5/1a0.5WenS -Jz1i -C$CPTTOPO -V -P -I$TOPOGRD.grad -E260/5 -Qs > $OUTFILE
-angles="0 45 90 135 180 225 270 315 360"
-for i in $angles
-do
-    OUTFILE=`basename $0 .gmt`_${i}.ps
-    grdview $TOPOGRD  -JM10i -Jz0.0005 -C$CPTTOPO -V -P -I$TOPOGRD.grad -E$i/5 -Qs > $OUTFILE
-done
+
+
 
 exit 0
