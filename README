@@ -3,6 +3,10 @@ GMT4 scripts and presentations for the GMT mini-course at Instituto Dom Luiz/ Un
 
 Clone me to get the scripts and examples
 just use "git clone https://github.com/jconvers/GMT-class.git"
+If you already cloned this, to update your files:
+"git pull origin master" and then you are done.
+
+IF, you don't use git, you can always download the .zip file (look to your right --------> )
 
 
 I made these scripts and examples for an introductory course to GMT scripts, so, this is not really an in-depth class by any means.
