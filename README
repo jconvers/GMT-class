@@ -10,15 +10,15 @@ It is designed to help a person getting started on bash scripting and GMT plots.
 All I want with this is save you some time when you try to learn GMT.   
 
 For each class, I made some examples that should run. These are the basic examples.
-There are some examples, mainly when we go into grids that will not run simply because the files that
-it is using are too big to put here. for everything else, just try it.
+There are some examples, mainly when we go into grids that will not run simply because the files that it is using are too big to put here. for everything else, just try it.
 
 Having said that, I am also thiking about this as an aide for a person that is learning these sort of stuff. 
-So I am interested that all the examples that should work are indeed working, and that hose examples are helpful of course :)
+So I am interested that all the examples that should work are indeed working, and that theys are helpful of course :)
 So, please let me know if nothing works and its all going to hell.
 
 I will try to keep this updated and on par with the class. IF, by any chance you did not make part of this,
-just send me a message and I will do my best to get you to run these examples.
+just send me a message and I will do my best to get you to run these examples. Also, without me tying to replace the GMT help forum, I can add some examples if you want to try to do some weird plot of your choosing.
+
 
 Thank you!!
 
@@ -26,7 +26,7 @@ Thank you!!
 IDL/FCUL 2015
 
 
-THis is the basic index fo the folders/classes:
+Basic index for the folders/classes:
 
 Class 1: Be patient, we'll ge there: 
     Introduction to Linux commands
