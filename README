@@ -1,15 +1,56 @@
 # GMT-class
-GMT4 scripts for the mini-course. Clone me to get the scripts and examples
+GMT4 scripts and presentations for the GMT mini-course at Instituto Dom Luiz/ Universidade de Lisboa. 
 
+Clone me to get the scripts and examples
 just use "git clone https://github.com/jconvers/GMT-class.git"
 
-Keep in mind, there are some examples that will not run simply because the files that
+
+I made these scripts and examples for an introductory course to GMT scripts, so, this is not really an in-depth class by any means.
+It is designed to help a person getting started on bash scripting and GMT plots. 
+All I want with this is save you some time when you try to learn GMT.   
+
+For each class, I made some examples that should run. These are the basic examples.
+There are some examples, mainly when we go into grids that will not run simply because the files that
 it is using are too big to put here. for everything else, just try it.
-And let me know if its all going to hell.
+
+Having said that, I am also thiking about this as an aide for a person that is learning these sort of stuff. 
+So I am interested that all the examples that should work are indeed working, and that hose examples are helpful of course :)
+So, please let me know if nothing works and its all going to hell.
 
 I will try to keep this updated and on par with the class. IF, by any chance you did not make part of this,
 just send me a message and I will do my best to get you to run these examples.
 
 Thank you!!
--Jaime
+
+-Jaime Convers
 IDL/FCUL 2015
+
+
+THis is the basic index fo the folders/classes:
+
+Class 1: Be patient, we'll ge there: 
+    Introduction to Linux commands
+    VIM: this is what I use everyday (optional) 
+    The first script, what every script should have
+    Excercises :)
+Class 2: Almost there: 
+    The AWK, GAWK commands and how they help you in GMT. 
+    First GMT scripts: how to organize them to make them reusable
+Class 3: Grids of Thrones: 
+    Introduction to grids. 
+    What is that "grid info" file?
+    cpt files... lets look at one of these, what should weknow about them?
+    How to get a basic grdimage
+Class 4: The Grid Awakens:
+    Small detour: making your scripts reusable with flags (parsing arguments into your script)
+    grdview (sort of a 3D perspective), Why is it so hard to get it to look OK? 
+    Inset maps!
+    What is the little trick to produce inset maps?
+    lets make one!
+Class 5: Legends! Yes, we all need them:
+    basic legend order
+    adding our stuff in a legend, what can we and can't we add?
+    making a couple of legends
+
+
+
